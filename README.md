@@ -19,7 +19,7 @@
 3. Install python libraries
    `pip install -r requirements.txt`
 4. Run backend server
-   `python flaskapp.py`
+   `python main.py`
 
 ## Instructions
 
