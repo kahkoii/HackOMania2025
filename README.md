@@ -12,13 +12,13 @@
    `yarn start`
 
 ### Backend
-
-1. Setup python environment
+1. `cd backend`
+2. Setup python environment
    `python -m venv venv`
    `venv\Scripts\activate`
-2. Install python libraries
+3. Install python libraries
    `pip install -r requirements.txt`
-3. Run backend server
+4. Run backend server
    `python flaskapp.py`
 
 ## Instructions
