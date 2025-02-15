@@ -1,12 +1,4 @@
-import {
-	Flex,
-	Text,
-	Icon,
-	Button,
-	Image,
-	Grid,
-	GridItem,
-} from '@chakra-ui/react'
+import { Flex, Text, Button, Image, Grid, GridItem } from '@chakra-ui/react'
 import {
 	AiFillAudio,
 	AiFillEdit,
@@ -19,6 +11,7 @@ import {
 } from 'react-icons/ai'
 import { useNavigate } from 'react-router-dom'
 import laksa from '/images/laksa.png'
+import React from 'react'
 
 const Home: React.FC = () => {
 	const navigate = useNavigate()
@@ -29,6 +22,7 @@ const Home: React.FC = () => {
 			alignItems="center"
 			justifyContent="center"
 			gap="20px"
+			color="black"
 		>
 			<Flex
 				flexDir="column"
@@ -36,6 +30,7 @@ const Home: React.FC = () => {
 				height="100vh"
 				border="20px solid black"
 				borderRadius="20px"
+				color="black"
 			>
 				<Flex
 					flexDir="row"
@@ -45,15 +40,8 @@ const Home: React.FC = () => {
 					alignItems="center"
 					paddingLeft="12px"
 				>
-					<Button
-						bgColor="#EF5737"
-						_hover=""
-						_active=""
-						color="white"
-					>
-						<Icon fontSize="22px">
-							<AiOutlineLeft />
-						</Icon>
+					<Button bgColor="#EF5737">
+						<AiOutlineLeft />
 						<Text marginLeft="10px" fontSize="lg">
 							Add recipe
 						</Text>
@@ -63,7 +51,6 @@ const Home: React.FC = () => {
 				<Text
 					textAlign="center"
 					fontSize="lg"
-					color="black"
 					fontWeight="semibold"
 					marginBottom="20px"
 				>
@@ -76,18 +63,18 @@ const Home: React.FC = () => {
 					padding="20px"
 					paddingTop="0"
 					gap={2}
+					color="black"
 				>
-					<GridItem rowSpan={1} colSpan={1}>
+					<GridItem rowSpan={1} colSpan={1} color="black">
 						<Button
 							height="100%"
 							width="100%"
 							bgColor="white"
 							border="1px solid #DDD"
+							color="black"
 						>
 							<Flex flexDir="column" alignItems="center">
-								<Icon fontSize="22px">
-									<AiFillEdit />
-								</Icon>
+								<AiFillEdit />
 								<Text fontWeight="normal">From scratch</Text>
 							</Flex>
 						</Button>
@@ -98,11 +85,10 @@ const Home: React.FC = () => {
 							width="100%"
 							bgColor="white"
 							border="1px solid #DDD"
+							color="black"
 						>
 							<Flex flexDir="column" alignItems="center">
-								<Icon fontSize="22px">
-									<AiOutlineFontSize />
-								</Icon>
+								<AiOutlineFontSize />
 								<Text fontWeight="normal">From text</Text>
 							</Flex>
 						</Button>
@@ -113,11 +99,10 @@ const Home: React.FC = () => {
 							width="100%"
 							bgColor="white"
 							border="1px solid #DDD"
+							color="black"
 						>
 							<Flex flexDir="column" alignItems="center">
-								<Icon fontSize="22px">
-									<AiOutlineLink />
-								</Icon>
+								<AiOutlineLink />
 								<Text fontWeight="normal">From URL</Text>
 							</Flex>
 						</Button>
@@ -128,11 +113,10 @@ const Home: React.FC = () => {
 							width="100%"
 							bgColor="white"
 							border="1px solid #DDD"
+							color="black"
 						>
 							<Flex flexDir="column" alignItems="center">
-								<Icon fontSize="22px">
-									<AiOutlinePicture />
-								</Icon>
+								<AiOutlinePicture />
 								<Text fontWeight="normal">From image</Text>
 							</Flex>
 						</Button>
@@ -143,11 +127,10 @@ const Home: React.FC = () => {
 							width="100%"
 							bgColor="white"
 							border="1px solid #DDD"
+							color="black"
 						>
 							<Flex flexDir="column" alignItems="center">
-								<Icon fontSize="22px">
-									<AiOutlineMail />
-								</Icon>
+								<AiOutlineMail />
 								<Text fontWeight="normal">From email</Text>
 							</Flex>
 						</Button>
@@ -158,11 +141,10 @@ const Home: React.FC = () => {
 							width="100%"
 							bgColor="white"
 							border="1px solid #DDD"
+							color="black"
 						>
 							<Flex flexDir="column" alignItems="center">
-								<Icon fontSize="22px">
-									<AiFillAudio />
-								</Icon>
+								<AiFillAudio />
 								<Text fontWeight="normal">
 									By voice dictation
 								</Text>
@@ -176,14 +158,13 @@ const Home: React.FC = () => {
 							bgColor="white"
 							border="1px solid #DDD"
 							onClick={() => navigate('/generate-recipe')}
+							color="black"
 						>
 							<Flex flexDir="row" alignItems="center">
 								<Text fontWeight="normal" marginRight="8px">
 									Generate from pantry
 								</Text>
-								<Icon fontSize="24px">
-									<AiOutlineCodeSandbox />
-								</Icon>
+								<AiOutlineCodeSandbox />
 							</Flex>
 						</Button>
 					</GridItem>
