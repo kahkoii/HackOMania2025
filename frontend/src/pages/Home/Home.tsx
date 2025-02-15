@@ -17,7 +17,7 @@ const Home: React.FC = () => {
 				<Image src={reactLogo} boxSize="160px" />
 			</Flex>
 			<Text fontWeight="bold" fontSize="xl">
-				Test vite hot reloading feature: {count}
+				Test vite ur mum reloading feature: {count}
 			</Text>
 			<Text fontWeight="light">
 				State is saved even on new page render

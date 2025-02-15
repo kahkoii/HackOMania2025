@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Courier New', Courier, monospace;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .App {
@@ -23,7 +23,8 @@
     height: 100%;
     display: flex;
     align-items: center;
-    background-color: #ff61f0;
+    
+    background-color: #ffffff;
     transition: 0.3s;
 }
 
@@ -47,12 +48,9 @@ button {
     outline: none;
 
     padding: 8px 16px;
-    background-image: linear-gradient(
-        to right, #927379 50%, #287409 50%
-    );
     background-position: 0%;
     background-size: 200%;
-    color: #194990;
+    color: #000000;
     font-size: 24px;
     font-weight: 700;
     transition: 0.3s;
@@ -60,6 +58,27 @@ button {
 
 button:hover {
     background-position: 100%;
+}
 
+canvas {
+    position: absolute;
+    bottom: 50px;
+    left: 20px;
+
+    appearance: none;
+    border: none;
+    outline: none;
+
+    padding: 8px 16px;
+    background-position: 0%;
+    background-size: 200%;
+    color: #000000;
+    font-size: 24px;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+canvas:hover {
+    background-position: 100%;
 }
 

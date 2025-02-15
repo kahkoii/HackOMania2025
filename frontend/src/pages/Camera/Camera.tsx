@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import './Camera.css';
 
 const Camera: React.FC = () => {
-	const videoRef = useRef(null);
-	const photoRef = useRef(null);
+	const videoRef = useRef<HTMLVideoElement | null>(null);
+	const photoRef = useRef<HTMLCanvasElement | null>(null);
 
 	const [hasPhoto, setHasPhoto] = useState(false);
 
@@ -14,7 +14,7 @@ const Camera: React.FC = () => {
 			video: {width: 1920, height: 1080}
 		})
 		.then(stream => {
-			let video = videoRef.current;
+			let video = videoRef.current!;
 			video.srcObject = stream;
 			video.play();
 		})
@@ -27,18 +27,22 @@ const Camera: React.FC = () => {
 		const width = 414;
 		const height = width / (16/9);
 
-		photoRef.width = width;
-		photoRef.height = height;
+		if (!photoRef.current || !videoRef.current) return;
 
-		let ctx = photoRef.getContext('2d');
-		ctx.drawImage(videoRef, 0, 0, width, height);
+		const photo = photoRef.current!;
+    	photo.width = width;
+    	photo.height = height;
+
+		let ctx = photo.getContext('2d');
+		if (!ctx) return;
+		ctx.drawImage(videoRef.current, 0, 0, width, height);
 		setHasPhoto(true);
 	}
 
 	const closePhoto = () => {
-		let photo = photoRef.current;
-		let ctx = photoRef.getContext('2d');
-
+		let photo = photoRef.current!;
+		let ctx = photo.getContext('2d');
+		if (!ctx) return;
 		ctx.clearRect(0, 0, photo.width, photo.height);
 
 		setHasPhoto(false); 
@@ -46,13 +50,13 @@ const Camera: React.FC = () => {
 
 	useEffect(() => {
 		getVideo();
-	}, [videoRef]);
+	}, []);
 
 	return (
 		<div className='App'>
 			<div className='Camera'>
 				<video ref={videoRef}></video>
-				<button onclick={takePhoto}>Snap</button>
+				<button onClick={takePhoto}>Snap</button>
 			</div>
 			<div className={'result ' + (hasPhoto ? 'hasPhoto' : '')}>
 				<canvas ref={photoRef}></canvas>
