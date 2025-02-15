@@ -15,9 +15,9 @@
 
 1. Setup python environment
    `python -m venv venv`
-   `pip install requirements.txt`
-2. Activate python venv
    `venv\Scripts\activate`
+2. Install python libraries
+   `pip install -r requirements.txt`
 3. Run backend server
    `python flaskapp.py`
 
