@@ -1,4 +1,4 @@
-import { Flex, Icon, Text, Button, Spinner, Link } from '@chakra-ui/react'
+import { Flex, Icon, Text, Button, Spinner, Image, Link } from '@chakra-ui/react'
 import { Checkbox } from '../../components/ui/checkbox'
 import {
 	NumberInputField,
@@ -6,7 +6,7 @@ import {
 } from '../../components/ui/number-input'
 import { useEffect, useState } from 'react'
 import { AiOutlineCamera, AiOutlineLeft, AiOutlineSearch } from 'react-icons/ai'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Ingredient, Recipe } from './types'
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -17,6 +17,7 @@ interface propInterface {
 
 const GenerateRecipe: React.FC = () => {
 	const navigate = useNavigate()
+	const location = useLocation()
 	const selectedList = new Map()
 	const [recipeStatus, setRecipeStatus] = useState('invalid')
 	const [recipe, setRecipe] = useState<Recipe>()
@@ -48,7 +49,7 @@ const GenerateRecipe: React.FC = () => {
 			unit: 'kg',
 			expiryDays: 8,
 			info: 'Long grain',
-		}
+		},
 	])
 
 	useEffect(() => {
@@ -96,9 +97,39 @@ const GenerateRecipe: React.FC = () => {
 		)
 	}
 
+	const uploadToServer = async () => {
+		if (!location.state?.image) return
+		location.state.image.toBlob(async (blob) => {
+			if (!blob) return
+
+			const formData = new FormData()
+			formData.append('image', blob, 'photo.png')
+
+			try {
+				const response = await fetch(
+					'http://127.0.0.1:5000/api/ingredients',
+					{
+						method: 'POST',
+						body: formData,
+					},
+				)
+
+				const data = await response.json()
+				if (response.ok) {
+					setIngredients(data.ingredients)
+				} else {
+					alert(`Error: ${data.error}`)
+				}
+			} catch (error) {
+				alert('Failed to upload image.')
+				console.error('Upload error:', error)
+			}
+		}, 'image/png')
+	}
+
 	const getRequest = () => {
 		console.log('=============\nSending get request with data: \n')
-		const data: { ingredients: String[] } = { ingredients: [] };
+		const data: { ingredients: string[] } = { ingredients: [] }
 		setRecipeStatus('loading')
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		for (const [k, _] of selectedList) {
@@ -154,6 +185,7 @@ const GenerateRecipe: React.FC = () => {
 					bgColor="#EF5737"
 					alignItems="center"
 					paddingLeft="12px"
+					marginBottom="10px"
 				>
 					<Button
 						bgColor="#EF5737"
@@ -235,12 +267,15 @@ const GenerateRecipe: React.FC = () => {
 						</Flex>
 					</Flex>
 				)}
+				{location.state?.image != null && (
+					<Image width="200px" src={location.state.image} />
+				)}
 				{recipeStatus == 'invalid' && (
 					<>
 						<Flex
 							flexDir="row"
 							width="82%"
-							margin="20px"
+							margin="10px 0 20px 0"
 							padding="10px 0"
 							borderRadius="20px"
 							bgColor="#F2F2F2"
@@ -270,12 +305,16 @@ const GenerateRecipe: React.FC = () => {
 							width="300px"
 							gap="8px"
 							height="60%"
+							overflow="scroll"
+							overflowX="hidden"
+							overflowY="auto"
 						>
 							{ingredientList.map((i, index) => (
 								<IngredientItem key={index} i={i} id={index} />
 							))}
 						</Flex>
 						<Button
+							margin="10px"
 							bgColor="#EF5737"
 							width="70%"
 							onClick={() => getRequest()}
@@ -304,8 +343,6 @@ const GenerateRecipe: React.FC = () => {
 
 export default GenerateRecipe
 
-
 function formatIngredient(ingredient: Ingredient): string {
-	return `${ingredient.name}: ${ingredient.amount} ${ingredient.unit} (expires in ${ingredient.expiryDays} days) – ${ingredient.info}`;
+	return `${ingredient.name}: ${ingredient.amount} ${ingredient.unit} (expires in ${ingredient.expiryDays} days) – ${ingredient.info}`
 }
-  
