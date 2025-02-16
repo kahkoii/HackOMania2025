@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react'
 import { AiOutlineCamera, AiOutlineLeft, AiOutlineSearch } from 'react-icons/ai'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Ingredient, Recipe } from './types'
-import { i } from 'vitest/dist/reporters-MmQN-57K'
 
 interface propInterface {
 	i: Ingredient
@@ -49,7 +48,7 @@ const GenerateRecipe: React.FC = () => {
 			unit: 'kg',
 			expiryDays: 8,
 			info: 'Long grain',
-		}
+		},
 	])
 
 	useEffect(() => {
@@ -97,7 +96,7 @@ const GenerateRecipe: React.FC = () => {
 
 	const getRequest = () => {
 		console.log('=============\nSending get request with data: \n')
-		const data: { ingredients: String[] } = { ingredients: [] };
+		const data: { ingredients: string[] } = { ingredients: [] }
 		setRecipeStatus('loading')
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		for (const [k, _] of selectedList) {
@@ -273,12 +272,16 @@ const GenerateRecipe: React.FC = () => {
 							width="300px"
 							gap="8px"
 							height="60%"
+							overflow="scroll"
+							overflowX="hidden"
+							overflowY="auto"
 						>
 							{ingredientList.map((i, index) => (
 								<IngredientItem key={index} i={i} id={index} />
 							))}
 						</Flex>
 						<Button
+							margin="10px"
 							bgColor="#EF5737"
 							width="70%"
 							onClick={() => getRequest()}
@@ -307,8 +310,6 @@ const GenerateRecipe: React.FC = () => {
 
 export default GenerateRecipe
 
-
 function formatIngredient(ingredient: Ingredient): string {
-	return `${ingredient.name}: ${ingredient.amount} ${ingredient.unit} (expires in ${ingredient.expiryDays} days) – ${ingredient.info}`;
+	return `${ingredient.name}: ${ingredient.amount} ${ingredient.unit} (expires in ${ingredient.expiryDays} days) – ${ingredient.info}`
 }
-  

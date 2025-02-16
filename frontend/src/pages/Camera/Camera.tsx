@@ -2,11 +2,11 @@ import { Button, Flex, Text } from '@chakra-ui/react'
 import React, { useRef, useEffect, useState } from 'react'
 import { AiOutlineFileImage, AiOutlineLeft } from 'react-icons/ai'
 import { useNavigate } from 'react-router-dom'
+import breakfastImg from '/images/breakfast.jpg'
 
 const Camera: React.FC = () => {
 	const videoRef = useRef<HTMLVideoElement | null>(null)
 	const photoRef = useRef<HTMLCanvasElement | null>(null)
-	let localStream = null
 
 	const [hasPhoto, setHasPhoto] = useState(false)
 
@@ -16,7 +16,6 @@ const Camera: React.FC = () => {
 				video: { width: 1920, height: 1080 },
 			})
 			.then((stream) => {
-				localStream = stream
 				const video = videoRef.current!
 				video.srcObject = stream
 				video.play()
@@ -51,9 +50,13 @@ const Camera: React.FC = () => {
 		setHasPhoto(false)
 	}
 
-	const handleImageUpload = () => {
-		const imgURL = photoRef.current.toDataURL('image/png')
-		navigate('/generate-recipe', { state: { image: imgURL } })
+	const handleImageUpload = (source = 'camera') => {
+		if (source == 'camera') {
+			const imgURL = photoRef.current.toDataURL('image/png')
+			navigate('/generate-recipe', { state: { image: imgURL } })
+		} else {
+			navigate('/generate-recipe', { state: { image: breakfastImg } })
+		}
 	}
 
 	const navigate = useNavigate()
@@ -114,7 +117,7 @@ const Camera: React.FC = () => {
 							borderRadius="0"
 							width="50%"
 							bgColor="#2adca1"
-							onClick={handleImageUpload}
+							onClick={() => handleImageUpload()}
 						>
 							Confirm
 						</Button>
@@ -137,8 +140,8 @@ const Camera: React.FC = () => {
 					borderTop="6px solid black"
 					fontSize="52px"
 					_hover={{ cursor: 'pointer' }}
-					onClick={(e) => {
-						handleImageUpload(e)
+					onClick={() => {
+						handleImageUpload('gallery')
 					}}
 					gap="6px"
 				>
