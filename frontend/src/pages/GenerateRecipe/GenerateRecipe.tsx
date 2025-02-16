@@ -65,7 +65,7 @@ const GenerateRecipe: React.FC = () => {
 		} else {
 			setRecipeStatus('invalid')
 		}
-	})
+	}, [])
 
 	const IngredientItem: React.FC<propInterface> = (props: propInterface) => {
 		const { i, id } = props
@@ -97,7 +97,6 @@ const GenerateRecipe: React.FC = () => {
 				</NumberInputRoot>
 				<Text>{i.unit}</Text>
 				<Checkbox
-					defaultChecked
 					onChange={() => {
 						if (selectedList.has(id)) {
 							selectedList.delete(id)
