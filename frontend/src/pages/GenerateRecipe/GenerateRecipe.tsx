@@ -247,13 +247,12 @@ const GenerateRecipe: React.FC = () => {
 							margin="10px 20px"
 							textAlign="center"
 							alignItems="center"
-							justifyContent="center"
+							justifyContent="flex-start"
 							borderRadius="8px"
 							boxShadow="lg"
-							padding="14px"
-							paddingTop="520px"
-							overflow="scroll"
-							overflowX="hidden"
+							p="14px"
+							gap="20px"
+							overflow="auto"
 						>
 							<Flex
 								flexDir="column"
