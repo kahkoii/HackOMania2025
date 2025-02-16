@@ -1,12 +1,4 @@
-import {
-	Flex,
-	Icon,
-	Text,
-	Button,
-	Spinner,
-	Image,
-	Link,
-} from '@chakra-ui/react'
+import { Flex, Icon, Text, Button, Spinner, Image, Link, Input } from '@chakra-ui/react'
 import { Checkbox } from '../../components/ui/checkbox'
 import {
 	NumberInputField,
@@ -59,6 +51,7 @@ const GenerateRecipe: React.FC = () => {
 			info: 'Long grain',
 		},
 	])
+	const [searchText, setSearchText] = useState<string>('')
 
 	useEffect(() => {
 		for (let i = 0; i < ingredientList.length; i++) {
@@ -306,11 +299,21 @@ const GenerateRecipe: React.FC = () => {
 							justifyContent="space-around"
 							alignItems="center"
 						>
-							<Text>Search for ingredients</Text>
+							<Input
+								placeholder="Search for ingredients"
+								variant="outline"
+								value={searchText}
+								onChange={(e) => setSearchText(e.target.value)}
+								flex="1"
+								marginRight="10px"
+							/>
 							<Flex gap="10px">
 								<Icon
 									fontSize="24px"
 									_hover={{ cursor: 'pointer' }}
+									onClick={() =>
+										navigate(`/ingredient-info/${encodeURIComponent(searchText)}`)
+									}
 								>
 									<AiOutlineSearch />
 								</Icon>

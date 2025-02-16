@@ -1,6 +1,8 @@
 // IngredientInfo.tsx
 import React, { useEffect, useState, useRef } from 'react';
+import { Flex, Icon, Text, Box, Button, List, Heading } from '@chakra-ui/react'
 import { useParams, useNavigate } from 'react-router-dom';
+import { AiOutlineLeft } from 'react-icons/ai'
 
 interface IngredientInfoData {
   category: string;
@@ -56,46 +58,110 @@ const IngredientInfo: React.FC = () => {
   }
 
   return (
-    <div>
-        <button onClick={() => navigate(-1)} style={{ marginBottom: '1rem' }}>
-            Back
-        </button>
-        <h1>{name}</h1>
-        <p><strong>Category:</strong> {info.category}</p>
-        <p><strong>Description:</strong> {info.description}</p>
-        <p><strong>Food Science:</strong> {info.foodScience}</p>
-        
-        <h3>Nutrition</h3>
-        {info.nutrition ? (
-            <ul>
-                {Object.entries(info.nutrition).map(([key, value]) => (
-                <li key={key}>
+    <Flex height="100vh" flexDir="column" alignItems="center" justifyContent="center" gap="20px">
+      <Flex
+        flexDir="column"
+        width="400px"
+        height="100vh"
+        border="20px solid black"
+        borderRadius="20px"
+        alignItems="center"
+      >
+        {/* Header with Back Button */}
+        <Flex
+          flexDir="row"
+          height="12vh"
+          width="100%"
+          bgColor="#EF5737"
+          alignItems="center"
+          paddingLeft="12px"
+          marginBottom="10px"
+        >
+          <Button
+            bgColor="#EF5737"
+            _hover={{}}
+            _active={{}}
+            color="white"
+            onClick={() => navigate(-1)}
+            variant="ghost"
+          >
+            <Icon fontSize="22px">
+              <AiOutlineLeft />
+            </Icon>
+            <Text marginLeft="10px" fontSize="lg">
+              Back
+            </Text>
+          </Button>
+        </Flex>
+
+        {/* Ingredient Info Content */}
+        <Box p="6" width="100%" overflowY="auto">
+          <Heading as="h1" size="xl" mb="4">
+            {name}
+          </Heading>
+          <Text fontSize="md" mb="2">
+            <strong>Category:</strong> {info.category}
+          </Text>
+          <Text fontSize="md" mb="2">
+            <strong>Description:</strong> {info.description}
+          </Text>
+          <Text fontSize="md" mb="6">
+            <strong>Food Science:</strong> {info.foodScience}
+          </Text>
+
+          <Heading as="h3" size="lg" mb="2">
+            Nutrition
+          </Heading>
+          {info.nutrition ? (
+            <List.Root mb="6">
+              {Object.entries(info.nutrition).map(([key, value]) => (
+                <List.Item key={key}>
+                  <Text fontSize="md">
                     <strong>{key}:</strong> {value}
-                </li>
-                ))}
-            </ul>
-        ) : (
-            <p>No nutrition information available.</p>
-        )}
-      
-        <h3>Alternatives</h3>
-        <ul>
-            {info.alternatives?.map((alt, idx) => (
-                <li key={idx}>
-                <strong>{alt.title}:</strong> {alt.details}
-                </li>
-            )) || <p>No alternatives available.</p>}
-        </ul>
-      
-        <h3>Preservation</h3>
-        <ul>
-            {info.preservation?.map((pres, idx) => (
-                <li key={idx}>
-                <strong>{pres.title}:</strong> {pres.details}
-                </li>
-            )) || <p>No preservation details available.</p>}
-        </ul>
-        </div>
+                  </Text>
+                </List.Item>
+              ))}
+            </List.Root>
+          ) : (
+            <Text>No nutrition information available.</Text>
+          )}
+
+          <Heading as="h3" size="lg" mb="2">
+            Alternatives
+          </Heading>
+          {info.alternatives && info.alternatives.length > 0 ? (
+            <List.Root mb="6">
+              {info.alternatives.map((alt, idx) => (
+                <List.Item key={idx}>
+                  <Text fontSize="md">
+                    <strong>{alt.title}:</strong> {alt.details}
+                  </Text>
+                </List.Item>
+              ))}
+            </List.Root>
+          ) : (
+            <Text>No alternatives available.</Text>
+          )}
+
+          <Heading as="h3" size="lg" mb="2">
+            Preservation
+          </Heading>
+          {info.preservation && info.preservation.length > 0 ? (
+            <List.Root>
+              {info.preservation.map((pres, idx) => (
+                <List.Item key={idx}>
+                  <Text fontSize="md">
+                    <strong>{pres.title}:</strong> {pres.details}
+                  </Text>
+                </List.Item>
+              ))}
+            </List.Root>
+          ) : (
+            <Text>No preservation details available.</Text>
+          )}
+        </Box>
+      </Flex>
+    </Flex>
      );
 };
 
