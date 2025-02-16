@@ -2,12 +2,11 @@ import { Button, Flex, Text } from '@chakra-ui/react'
 import React, { useRef, useEffect, useState } from 'react'
 import { AiOutlineFileImage, AiOutlineLeft } from 'react-icons/ai'
 import { useNavigate } from 'react-router-dom'
-// import './Camera.css';
 
 const Camera: React.FC = () => {
 	const videoRef = useRef<HTMLVideoElement | null>(null)
 	const photoRef = useRef<HTMLCanvasElement | null>(null)
-	const uploadImage = React.useRef(null)
+	let localStream = null
 
 	const [hasPhoto, setHasPhoto] = useState(false)
 
@@ -17,6 +16,7 @@ const Camera: React.FC = () => {
 				video: { width: 1920, height: 1080 },
 			})
 			.then((stream) => {
+				localStream = stream
 				const video = videoRef.current!
 				video.srcObject = stream
 				video.play()
@@ -51,9 +51,9 @@ const Camera: React.FC = () => {
 		setHasPhoto(false)
 	}
 
-	const handleImageUpload = (e) => {
-		console.log('Uploaded Image File')
-		navigate('/generate-recipe')
+	const handleImageUpload = () => {
+		const imgURL = photoRef.current.toDataURL('image/png')
+		navigate('/generate-recipe', { state: { image: imgURL } })
 	}
 
 	const navigate = useNavigate()
@@ -88,7 +88,7 @@ const Camera: React.FC = () => {
 					marginLeft={'10px'}
 					zIndex={2}
 					_hover={{ cursor: 'pointer' }}
-					onClick={() => navigate('-1')}
+					onClick={() => navigate('/')}
 				>
 					<AiOutlineLeft />
 				</Button>
@@ -114,7 +114,7 @@ const Camera: React.FC = () => {
 							borderRadius="0"
 							width="50%"
 							bgColor="#2adca1"
-							onClick={takePhoto}
+							onClick={handleImageUpload}
 						>
 							Confirm
 						</Button>
