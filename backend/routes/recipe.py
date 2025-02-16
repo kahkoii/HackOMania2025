@@ -21,7 +21,7 @@ def generate_recipe():
 
     prompt = (
         "Generate a recipe using the following ingredients: " + ", ".join(ingredients) + ".\n"
-        "Try to avoid ingredietns that are not provided.\n"
+        "Try to avoid ingredietns that are not provided. some garnishing is fine\n"
         "If additional text is provided, consider it: " + extra_text + "\n\n"
         "Return the recipe in the following JSON format (and nothing else):\n"
         "{\n"
