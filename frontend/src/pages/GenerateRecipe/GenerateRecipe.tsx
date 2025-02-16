@@ -1,4 +1,12 @@
-import { Flex, Icon, Text, Button, Spinner, Image, Link } from '@chakra-ui/react'
+import {
+	Flex,
+	Icon,
+	Text,
+	Button,
+	Spinner,
+	Image,
+	Link,
+} from '@chakra-ui/react'
 import { Checkbox } from '../../components/ui/checkbox'
 import {
 	NumberInputField,
@@ -8,7 +16,7 @@ import { useEffect, useState } from 'react'
 import { AiOutlineCamera, AiOutlineLeft, AiOutlineSearch } from 'react-icons/ai'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Ingredient, Recipe } from './types'
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom'
 
 interface propInterface {
 	i: Ingredient
@@ -61,6 +69,8 @@ const GenerateRecipe: React.FC = () => {
 	useEffect(() => {
 		if (location.state?.image) {
 			uploadToServer()
+		} else {
+			setRecipeStatus('invalid')
 		}
 	})
 
@@ -77,7 +87,11 @@ const GenerateRecipe: React.FC = () => {
 				padding="10px 20px"
 				gap="10px"
 			>
-				<Link as={RouterLink} to={`/ingredient-info/${encodeURIComponent(i.name)}`} fontWeight="semibold">
+				<Link
+					as={RouterLink}
+					to={`/ingredient-info/${encodeURIComponent(i.name)}`}
+					fontWeight="semibold"
+				>
 					{i.name}
 				</Link>
 				<NumberInputRoot
@@ -127,6 +141,7 @@ const GenerateRecipe: React.FC = () => {
 					.then((data) => {
 						console.log(data)
 						setIngredientList(data.ingredients)
+						setRecipeStatus('valid')
 					})
 			} catch (error) {
 				alert('Failed to upload image.')
