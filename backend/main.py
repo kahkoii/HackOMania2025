@@ -13,3 +13,6 @@ app.register_blueprint(imageToIngredient_bp)
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+

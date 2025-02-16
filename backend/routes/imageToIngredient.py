@@ -49,7 +49,23 @@ def get_ingredients():
 
         ingredients = [item.strip() for item in clean_text.split(",") if item.strip()]
 
-        return jsonify({'ingredients': ingredients}), 200
+        res = []
+        for i in ingredients:
+            res.append(
+                {
+                    "name": i,
+                    "amount": 2,
+                    "unit": "pcs",
+                    "expiryDays": 3,
+                    "info": ""
+
+
+                }
+            )
+
+            print({'ingredients': res})
+
+        return jsonify({'ingredients': res}), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
