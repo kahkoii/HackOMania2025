@@ -1,3 +1,4 @@
+import sys
 from flask import Blueprint, request, jsonify
 from openai_client import openai_client
 
@@ -23,9 +24,8 @@ def get_ingredient_info():
         '    "description": <string>,\n'
         '    "foodScience": <string>,\n'
         '    "nutrition": {\n'
-        '         "calories": <string>,\n'
-        '         "protein": <string>,\n'
-        '         "sodium": <string>\n'
+        '         "<string>": <string>,\n'
+                  "...\n"
         "    },\n"
         '    "alternatives": [\n'
         '         {"title": <string>, "details": <string>},\n'
@@ -61,6 +61,7 @@ def get_ingredient_info():
 
     try:
         ingredient_info = openai_client.text_request(messages, "json_object")
+        print(ingredient_info, file=sys.stderr)
         return jsonify(ingredient_info)
     
     except Exception as e:

@@ -1,4 +1,4 @@
-import { Flex, Icon, Text, Button, Spinner } from '@chakra-ui/react'
+import { Flex, Icon, Text, Button, Spinner, Link } from '@chakra-ui/react'
 import { Checkbox } from '../../components/ui/checkbox'
 import {
 	NumberInputField,
@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { AiOutlineCamera, AiOutlineLeft, AiOutlineSearch } from 'react-icons/ai'
 import { useNavigate } from 'react-router-dom'
 import { Ingredient, Recipe } from './types'
-import { i } from 'vitest/dist/reporters-MmQN-57K'
+import { Link as RouterLink } from 'react-router-dom';
 
 interface propInterface {
 	i: Ingredient
@@ -70,7 +70,9 @@ const GenerateRecipe: React.FC = () => {
 				padding="10px 20px"
 				gap="10px"
 			>
-				<Text fontWeight="semibold">{i.name}</Text>
+				<Link as={RouterLink} to={`/ingredient-info/${encodeURIComponent(i.name)}`} fontWeight="semibold">
+					{i.name}
+				</Link>
 				<NumberInputRoot
 					defaultValue={i.amount}
 					step={1}
@@ -202,7 +204,7 @@ const GenerateRecipe: React.FC = () => {
 							borderRadius="8px"
 							boxShadow="lg"
 							padding="14px"
-							paddingTop="280px"
+							paddingTop="520px"
 							overflow="scroll"
 							overflowX="hidden"
 						>
