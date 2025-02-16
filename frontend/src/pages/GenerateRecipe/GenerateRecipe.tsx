@@ -65,7 +65,7 @@ const GenerateRecipe: React.FC = () => {
 		} else {
 			setRecipeStatus('invalid')
 		}
-	})
+	}, [])
 
 	const IngredientItem: React.FC<propInterface> = (props: propInterface) => {
 		const { i, id } = props
@@ -111,36 +111,37 @@ const GenerateRecipe: React.FC = () => {
 	}
 
 	const uploadToServer = async () => {
+		console.log("Upload Sevrer Runinng")
 		if (!location.state?.image) return
-		location.state.image.toBlob(async (blob) => {
-			if (!blob) return
 
+		try {
+			// Convert Data URL (Base64) to Blob
+			const response = await fetch(location.state.image)
+			const blob = await response.blob()
+
+			// Create FormData and append the image
 			const formData = new FormData()
-			formData.append('image', blob, 'photo.png')
+			formData.append('image', blob, 'photo.png') // Name it properly
 
-			try {
-				const response = await fetch(
-					'http://127.0.0.1:5000/api/ingredients',
-					{
-						method: 'POST',
-						body: formData,
-					},
-				)
-					.then((res) => {
-						if (res.status == 200) {
-							return res.json
-						}
-					})
-					.then((data) => {
-						console.log(data)
-						setIngredientList(data.ingredients)
-						setRecipeStatus('valid')
-					})
-			} catch (error) {
-				alert('Failed to upload image.')
-				console.error('Upload error:', error)
+			// Send the image to the Flask API
+			const res = await fetch('http://127.0.0.1:5000/api/ingredients', {
+				method: 'POST',
+				body: formData,
+			})
+
+			// Process API response
+			const data = await res.json()
+			if (res.ok) {
+				console.log('Ingredients:', data.ingredients)
+				setIngredientList(data.ingredients)
+				setRecipeStatus('invalid')
+			} else {
+				alert(`Error: ${data.error}`)
 			}
-		}, 'image/png')
+		} catch (error) {
+			alert('Failed to upload image.')
+			console.error('Upload error:', error)
+		}
 	}
 
 	const getRequest = () => {
