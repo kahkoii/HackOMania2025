@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { AiOutlineCamera, AiOutlineLeft, AiOutlineSearch } from 'react-icons/ai'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Ingredient, Recipe } from './types'
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom'
 
 interface propInterface {
 	i: Ingredient
@@ -19,7 +19,7 @@ const GenerateRecipe: React.FC = () => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const selectedList = new Map()
-	const [recipeStatus, setRecipeStatus] = useState('invalid')
+	const [recipeStatus, setRecipeStatus] = useState('loading')
 	const [recipe, setRecipe] = useState<Recipe>()
 	const [ingredientList, setIngredientList] = useState<Ingredient[]>([
 		{
@@ -59,6 +59,14 @@ const GenerateRecipe: React.FC = () => {
 		}
 	}, [ingredientList])
 
+	useEffect(() => {
+		if (location.state?.image) {
+			uploadToServer()
+		} else {
+			setRecipeStatus('invalid')
+		}
+	})
+
 	const IngredientItem: React.FC<propInterface> = (props: propInterface) => {
 		const { i, id } = props
 		return (
@@ -72,7 +80,11 @@ const GenerateRecipe: React.FC = () => {
 				padding="10px 20px"
 				gap="10px"
 			>
-				<Link as={RouterLink} to={`/ingredient-info/${encodeURIComponent(i.name)}`} fontWeight="semibold">
+				<Link
+					as={RouterLink}
+					to={`/ingredient-info/${encodeURIComponent(i.name)}`}
+					fontWeight="semibold"
+				>
 					{i.name}
 				</Link>
 				<NumberInputRoot
@@ -114,13 +126,16 @@ const GenerateRecipe: React.FC = () => {
 						body: formData,
 					},
 				)
-
-				const data = await response.json()
-				if (response.ok) {
-					setIngredients(data.ingredients)
-				} else {
-					alert(`Error: ${data.error}`)
-				}
+					.then((res) => {
+						if (res.status == 200) {
+							return res.json
+						}
+					})
+					.then((data) => {
+						console.log(data)
+						setIngredientList(data.ingredients)
+						setRecipeStatus('valid')
+					})
 			} catch (error) {
 				alert('Failed to upload image.')
 				console.error('Upload error:', error)
