@@ -5,8 +5,6 @@ import io
 import requests
 import re
 
-app = Flask(__name__)
-
 OLLAMA_MODEL = "llava"
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
@@ -55,7 +53,3 @@ def get_ingredients():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-
-if __name__ == '__main__':
-    app.run(debug=True)

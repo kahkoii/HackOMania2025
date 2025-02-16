@@ -14,6 +14,6 @@ payload2 = {
 
 headers = {"Content-Type": "application/json"}
 
-# response = requests.post(url1, headers=headers, data=json.dumps(payload1))
-response = requests.post(url2, headers=headers, data=json.dumps(payload2))
+response = requests.post(url1, headers=headers, data=json.dumps(payload1))
+# response = requests.post(url2, headers=headers, data=json.dumps(payload2))
 print(response.json())

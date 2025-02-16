@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { AiOutlineCamera, AiOutlineLeft, AiOutlineSearch } from 'react-icons/ai'
 import { useNavigate } from 'react-router-dom'
 import { Ingredient, Recipe } from './types'
+import { i } from 'vitest/dist/reporters-MmQN-57K'
 
 interface propInterface {
 	i: Ingredient
@@ -34,6 +35,20 @@ const GenerateRecipe: React.FC = () => {
 			expiryDays: 8,
 			info: 'Can be aged',
 		},
+		{
+			name: 'Potato',
+			amount: 4,
+			unit: 'pcs',
+			expiryDays: 8,
+			info: 'Starchy',
+		},
+		{
+			name: 'Rice',
+			amount: 1,
+			unit: 'kg',
+			expiryDays: 8,
+			info: 'Long grain',
+		}
 	])
 
 	useEffect(() => {
@@ -81,20 +96,21 @@ const GenerateRecipe: React.FC = () => {
 
 	const getRequest = () => {
 		console.log('=============\nSending get request with data: \n')
-		const data = []
+		const data: { ingredients: String[] } = { ingredients: [] };
 		setRecipeStatus('loading')
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		for (const [k, _] of selectedList) {
-			data.push(ingredientList[k])
+			data.ingredients.push(formatIngredient(ingredientList[k]))
 		}
-		fetch('https://httpbin.org/post', {
+		console.log(data)
+		fetch('http://127.0.0.1:5000/generate-recipe', {
 			body: JSON.stringify(data),
 			credentials: 'same-origin',
 			headers: {
 				'content-type': 'application/json',
 			},
 			method: 'POST',
-			mode: 'no-cors', // no-cors, cors, *same-origin
+			mode: 'cors', // no-cors, cors, *same-origin
 		})
 			.then((r) => {
 				if (r.status == 200) {
@@ -103,65 +119,13 @@ const GenerateRecipe: React.FC = () => {
 				return null
 			})
 			.then((json) => {
-				// TODO: VERIFY DATA
-				if (false) {
+				if (JSON.parse(json).status == 'invalid') {
 					setRecipeStatus('invalid')
 				} else {
-					// TODO: REAL DATA
-					setRecipe({
-						title: 'Caprese Pasta Bake',
-						description:
-							'A delightful hot dish combining the classic flavors of Caprese in a warm, cheesy pasta bake.',
-						ingredients: [
-							'300g pasta',
-							'2 large tomatoes, diced',
-							'200g mozzarella cheese, cubed',
-							'Fresh basil leaves',
-							'2 tablespoons olive oil',
-							'Salt to taste',
-							'Pepper to taste',
-							'1 teaspoon balsamic vinegar (optional)',
-						],
-						instructions: [
-							{
-								title: 'Preheat the Oven',
-								details: 'Preheat your oven to 200°C (400°F).',
-							},
-							{
-								title: 'Cook the Pasta',
-								details:
-									'Boil the pasta in salted water according to package instructions. Drain and set aside.',
-							},
-							{
-								title: 'Prepare the Tomato Mixture',
-								details:
-									'In a bowl, combine the diced tomatoes, olive oil, salt, pepper, and balsamic vinegar. Mix well.',
-							},
-							{
-								title: 'Combine Ingredients',
-								details:
-									'In a large baking dish, combine the cooked pasta, tomato mixture, and half of the mozzarella. Mix until well combined.',
-							},
-							{
-								title: 'Top with Cheese and Basil',
-								details:
-									'Scatter the remaining mozzarella on top and tear fresh basil leaves over the dish.',
-							},
-							{
-								title: 'Bake',
-								details:
-									'Bake in the preheated oven for about 20-25 minutes, or until the cheese is bubbly and golden.',
-							},
-							{
-								title: 'Serve',
-								details:
-									'Remove from the oven and let it cool for a few minutes before serving hot.',
-							},
-						],
-					})
+					const recipe = JSON.parse(json)
+					setRecipe(recipe)
 					setRecipeStatus('valid')
 				}
-				console.log(json)
 			})
 	}
 
@@ -238,7 +202,7 @@ const GenerateRecipe: React.FC = () => {
 							borderRadius="8px"
 							boxShadow="lg"
 							padding="14px"
-							paddingTop="410px"
+							paddingTop="280px"
 							overflow="scroll"
 							overflowX="hidden"
 						>
@@ -337,3 +301,9 @@ const GenerateRecipe: React.FC = () => {
 }
 
 export default GenerateRecipe
+
+
+function formatIngredient(ingredient: Ingredient): string {
+	return `${ingredient.name}: ${ingredient.amount} ${ingredient.unit} (expires in ${ingredient.expiryDays} days) – ${ingredient.info}`;
+}
+  
