@@ -4,7 +4,7 @@ import {
 	NumberInputField,
 	NumberInputRoot,
 } from '../../components/ui/number-input'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AiOutlineCamera, AiOutlineLeft, AiOutlineSearch } from 'react-icons/ai'
 import { useNavigate } from 'react-router-dom'
 import { Ingredient, Recipe } from './types'
@@ -36,6 +36,12 @@ const GenerateRecipe: React.FC = () => {
 		},
 	])
 
+	useEffect(() => {
+		for (let i = 0; i < ingredientList.length; i++) {
+			selectedList.set(i, 1)
+		}
+	}, [ingredientList])
+
 	const IngredientItem: React.FC<propInterface> = (props: propInterface) => {
 		const { i, id } = props
 		return (
@@ -60,6 +66,7 @@ const GenerateRecipe: React.FC = () => {
 				</NumberInputRoot>
 				<Text>{i.unit}</Text>
 				<Checkbox
+					defaultChecked
 					onChange={() => {
 						if (selectedList.has(id)) {
 							selectedList.delete(id)
@@ -152,7 +159,6 @@ const GenerateRecipe: React.FC = () => {
 							},
 						],
 					})
-					console.log('AHHHHH')
 					setRecipeStatus('valid')
 				}
 				console.log(json)
