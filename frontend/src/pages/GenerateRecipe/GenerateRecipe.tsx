@@ -1,4 +1,4 @@
-import { Flex, Icon, Text, Button } from '@chakra-ui/react'
+import { Flex, Icon, Text, Button, Spinner } from '@chakra-ui/react'
 import { Checkbox } from '../../components/ui/checkbox'
 import {
 	NumberInputField,
@@ -7,7 +7,7 @@ import {
 import { useState } from 'react'
 import { AiOutlineCamera, AiOutlineLeft, AiOutlineSearch } from 'react-icons/ai'
 import { useNavigate } from 'react-router-dom'
-import Ingredient from './ingredient'
+import { Ingredient, Recipe } from './types'
 
 interface propInterface {
 	i: Ingredient
@@ -17,6 +17,8 @@ interface propInterface {
 const GenerateRecipe: React.FC = () => {
 	const navigate = useNavigate()
 	const selectedList = new Map()
+	const [recipeStatus, setRecipeStatus] = useState('invalid')
+	const [recipe, setRecipe] = useState<Recipe>()
 	const [ingredientList, setIngredientList] = useState<Ingredient[]>([
 		{
 			name: 'Egg',
@@ -73,11 +75,88 @@ const GenerateRecipe: React.FC = () => {
 	const getRequest = () => {
 		console.log('=============\nSending get request with data: \n')
 		const data = []
+		setRecipeStatus('loading')
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		for (const [k, _] of selectedList) {
 			data.push(ingredientList[k])
 		}
-		console.log(data)
+		fetch('https://httpbin.org/post', {
+			body: JSON.stringify(data),
+			credentials: 'same-origin',
+			headers: {
+				'content-type': 'application/json',
+			},
+			method: 'POST',
+			mode: 'no-cors', // no-cors, cors, *same-origin
+		})
+			.then((r) => {
+				if (r.status == 200) {
+					return r.json()
+				}
+				return null
+			})
+			.then((json) => {
+				// TODO: VERIFY DATA
+				if (false) {
+					setRecipeStatus('invalid')
+				} else {
+					// TODO: REAL DATA
+					setRecipe({
+						title: 'Caprese Pasta Bake',
+						description:
+							'A delightful hot dish combining the classic flavors of Caprese in a warm, cheesy pasta bake.',
+						ingredients: [
+							'300g pasta',
+							'2 large tomatoes, diced',
+							'200g mozzarella cheese, cubed',
+							'Fresh basil leaves',
+							'2 tablespoons olive oil',
+							'Salt to taste',
+							'Pepper to taste',
+							'1 teaspoon balsamic vinegar (optional)',
+						],
+						instructions: [
+							{
+								title: 'Preheat the Oven',
+								details: 'Preheat your oven to 200°C (400°F).',
+							},
+							{
+								title: 'Cook the Pasta',
+								details:
+									'Boil the pasta in salted water according to package instructions. Drain and set aside.',
+							},
+							{
+								title: 'Prepare the Tomato Mixture',
+								details:
+									'In a bowl, combine the diced tomatoes, olive oil, salt, pepper, and balsamic vinegar. Mix well.',
+							},
+							{
+								title: 'Combine Ingredients',
+								details:
+									'In a large baking dish, combine the cooked pasta, tomato mixture, and half of the mozzarella. Mix until well combined.',
+							},
+							{
+								title: 'Top with Cheese and Basil',
+								details:
+									'Scatter the remaining mozzarella on top and tear fresh basil leaves over the dish.',
+							},
+							{
+								title: 'Bake',
+								details:
+									'Bake in the preheated oven for about 20-25 minutes, or until the cheese is bubbly and golden.',
+							},
+							{
+								title: 'Serve',
+								details:
+									'Remove from the oven and let it cool for a few minutes before serving hot.',
+							},
+						],
+					})
+					console.log('AHHHHH')
+					setRecipeStatus('valid')
+				}
+				console.log(json)
+			})
 	}
 
 	return (
@@ -119,43 +198,133 @@ const GenerateRecipe: React.FC = () => {
 						</Text>
 					</Button>
 				</Flex>
-				<Flex
-					flexDir="row"
-					width="82%"
-					margin="20px"
-					padding="10px 0"
-					borderRadius="20px"
-					bgColor="#F2F2F2"
-					boxShadow="lg"
-					justifyContent="space-around"
-					alignItems="center"
-				>
-					<Text>Search for ingredients</Text>
-					<Flex gap="10px">
-						<Icon fontSize="24px" _hover={{ cursor: 'pointer' }}>
-							<AiOutlineSearch />
-						</Icon>
-						<Icon
-							fontSize="24px"
-							_hover={{ cursor: 'pointer' }}
-							onClick={() => navigate('/camera')}
+				{recipeStatus == 'valid' && (
+					<Flex
+						flexDir="column"
+						bgColor="#FFE5D8"
+						height="100%"
+						width="100%"
+						alignItems="center"
+						padding="20px 0px"
+						overflow="hidden"
+					>
+						<Text
+							textDecor="underline"
+							fontWeight="bold"
+							fontSize="xl"
 						>
-							<AiOutlineCamera />
-						</Icon>
+							{recipe?.title}
+						</Text>
+						<Text
+							fontSize="md"
+							margin="8px 30px"
+							textAlign="center"
+						>
+							{recipe?.description}
+						</Text>
+						<Flex
+							flexDir="column"
+							bgColor="white"
+							margin="10px 20px"
+							textAlign="center"
+							alignItems="center"
+							justifyContent="center"
+							borderRadius="8px"
+							boxShadow="lg"
+							padding="14px"
+							paddingTop="410px"
+							overflow="scroll"
+							overflowX="hidden"
+						>
+							<Flex
+								flexDir="column"
+								textAlign="start"
+								marginBottom="10px"
+							>
+								<Text fontWeight="semibold">Ingredients:</Text>
+								{recipe?.ingredients.map((i, index) => (
+									<Text key={index}>- {i}</Text>
+								))}
+							</Flex>
+							<Flex flexDir="column" textAlign="start">
+								<Text fontWeight="semibold">Instructions:</Text>
+								{recipe?.instructions.map((i, index) => (
+									<Text key={index}>
+										<Text
+											fontWeight="bold"
+											display="inline"
+										>
+											{index + 1}.
+										</Text>{' '}
+										{i.title} {i.details}
+									</Text>
+								))}
+							</Flex>
+						</Flex>
 					</Flex>
-				</Flex>
-				<Flex flexDir="column" width="300px" gap="8px" height="60%">
-					{ingredientList.map((i, index) => (
-						<IngredientItem key={index} i={i} id={index} />
-					))}
-				</Flex>
-				<Button
-					bgColor="#EF5737"
-					width="70%"
-					onClick={() => getRequest()}
-				>
-					<Text>Generate Recipe</Text>
-				</Button>
+				)}
+				{recipeStatus == 'invalid' && (
+					<>
+						<Flex
+							flexDir="row"
+							width="82%"
+							margin="20px"
+							padding="10px 0"
+							borderRadius="20px"
+							bgColor="#F2F2F2"
+							boxShadow="lg"
+							justifyContent="space-around"
+							alignItems="center"
+						>
+							<Text>Search for ingredients</Text>
+							<Flex gap="10px">
+								<Icon
+									fontSize="24px"
+									_hover={{ cursor: 'pointer' }}
+								>
+									<AiOutlineSearch />
+								</Icon>
+								<Icon
+									fontSize="24px"
+									_hover={{ cursor: 'pointer' }}
+									onClick={() => navigate('/camera')}
+								>
+									<AiOutlineCamera />
+								</Icon>
+							</Flex>
+						</Flex>
+						<Flex
+							flexDir="column"
+							width="300px"
+							gap="8px"
+							height="60%"
+						>
+							{ingredientList.map((i, index) => (
+								<IngredientItem key={index} i={i} id={index} />
+							))}
+						</Flex>
+						<Button
+							bgColor="#EF5737"
+							width="70%"
+							onClick={() => getRequest()}
+						>
+							<Text>Generate Recipe</Text>
+						</Button>
+					</>
+				)}
+				{recipeStatus == 'loading' && (
+					<Flex
+						flexDir="column"
+						height="100%"
+						alignItems="center"
+						justifyContent="center"
+					>
+						<Spinner size="lg" />
+						<Text marginTop="28px" fontSize="md">
+							Generating recipes...
+						</Text>
+					</Flex>
+				)}
 			</Flex>
 		</Flex>
 	)
