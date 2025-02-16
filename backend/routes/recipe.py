@@ -13,7 +13,7 @@ def generate_recipe():
     if not ingredients or not isinstance(ingredients, list):
         return jsonify({"error": "Ingredients must be provided as a list"}), 400
 
-    extra_text = request_data.get("textFilter")
+    extra_text = request_data.get("textFilter") or ""
 
     # prompt = "Generate a recipe using the following ingredients: " + ", ".join(ingredients)
     # if extra_text:
