@@ -94,6 +94,36 @@ const GenerateRecipe: React.FC = () => {
 		)
 	}
 
+	const uploadToServer = async () => {
+		if (!location.state?.image) return
+		location.state.image.toBlob(async (blob) => {
+			if (!blob) return
+
+			const formData = new FormData()
+			formData.append('image', blob, 'photo.png')
+
+			try {
+				const response = await fetch(
+					'http://127.0.0.1:5000/api/ingredients',
+					{
+						method: 'POST',
+						body: formData,
+					},
+				)
+
+				const data = await response.json()
+				if (response.ok) {
+					setIngredients(data.ingredients)
+				} else {
+					alert(`Error: ${data.error}`)
+				}
+			} catch (error) {
+				alert('Failed to upload image.')
+				console.error('Upload error:', error)
+			}
+		}, 'image/png')
+	}
+
 	const getRequest = () => {
 		console.log('=============\nSending get request with data: \n')
 		const data: { ingredients: string[] } = { ingredients: [] }
