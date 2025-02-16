@@ -18,7 +18,7 @@ const GenerateRecipe: React.FC = () => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const selectedList = new Map()
-	const [recipeStatus, setRecipeStatus] = useState('invalid')
+	const [recipeStatus, setRecipeStatus] = useState('loading')
 	const [recipe, setRecipe] = useState<Recipe>()
 	const [ingredientList, setIngredientList] = useState<Ingredient[]>([
 		{
@@ -56,6 +56,12 @@ const GenerateRecipe: React.FC = () => {
 			selectedList.set(i, 1)
 		}
 	}, [ingredientList])
+
+	useEffect(() => {
+		if (location.state?.image) {
+			uploadToServer()
+		}
+	})
 
 	const IngredientItem: React.FC<propInterface> = (props: propInterface) => {
 		const { i, id } = props
@@ -110,13 +116,15 @@ const GenerateRecipe: React.FC = () => {
 						body: formData,
 					},
 				)
-
-				const data = await response.json()
-				if (response.ok) {
-					setIngredients(data.ingredients)
-				} else {
-					alert(`Error: ${data.error}`)
-				}
+					.then((res) => {
+						if (res.status == 200) {
+							return res.json
+						}
+					})
+					.then((data) => {
+						console.log(data)
+						setIngredientList(data.ingredients)
+					})
 			} catch (error) {
 				alert('Failed to upload image.')
 				console.error('Upload error:', error)
