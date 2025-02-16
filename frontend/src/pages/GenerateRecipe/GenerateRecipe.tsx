@@ -1,4 +1,4 @@
-import { Flex, Icon, Text, Button, Spinner } from '@chakra-ui/react'
+import { Flex, Icon, Text, Button, Spinner, Image } from '@chakra-ui/react'
 import { Checkbox } from '../../components/ui/checkbox'
 import {
 	NumberInputField,
@@ -6,7 +6,7 @@ import {
 } from '../../components/ui/number-input'
 import { useEffect, useState } from 'react'
 import { AiOutlineCamera, AiOutlineLeft, AiOutlineSearch } from 'react-icons/ai'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Ingredient, Recipe } from './types'
 import { i } from 'vitest/dist/reporters-MmQN-57K'
 
@@ -17,6 +17,7 @@ interface propInterface {
 
 const GenerateRecipe: React.FC = () => {
 	const navigate = useNavigate()
+	const location = useLocation()
 	const selectedList = new Map()
 	const [recipeStatus, setRecipeStatus] = useState('invalid')
 	const [recipe, setRecipe] = useState<Recipe>()
@@ -152,6 +153,7 @@ const GenerateRecipe: React.FC = () => {
 					bgColor="#EF5737"
 					alignItems="center"
 					paddingLeft="12px"
+					marginBottom="10px"
 				>
 					<Button
 						bgColor="#EF5737"
@@ -233,12 +235,15 @@ const GenerateRecipe: React.FC = () => {
 						</Flex>
 					</Flex>
 				)}
+				{location.state?.image != null && (
+					<Image width="200px" src={location.state.image} />
+				)}
 				{recipeStatus == 'invalid' && (
 					<>
 						<Flex
 							flexDir="row"
 							width="82%"
-							margin="20px"
+							margin="10px 0 20px 0"
 							padding="10px 0"
 							borderRadius="20px"
 							bgColor="#F2F2F2"
