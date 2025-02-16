@@ -19,7 +19,11 @@
 3. Install python libraries
    `pip install -r requirements.txt`
 4. Run backend server
-   `python flaskapp.py`
+   `python main.py`
+5. Run Ollama in a Docker Container
+`docker run --rm --name ollama -d -p 11434:11434 ollama/ollama`
+6. Download LLaVA Inside the Container
+`docker exec -it ollama ollama pull llava`
 
 ## Instructions
 

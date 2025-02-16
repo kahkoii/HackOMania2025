@@ -1,4 +1,46 @@
 /frontend/node_modules
-/venv
+/backend/venv
 .DS_Store
 .env
+
+# Python Cache and Virtual Environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+env/
+llava_env/
+*.log
+
+# Flask Environment Variables
+.env
+config.json
+
+# Node.js Dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+pnpm-lock.yaml
+
+# Flask Cache and Logs
+instance/
+*.sqlite3
+*.db
+*.bak
+
+# Compiled Python files
+*.pyc
+*.pyo
+
+# JetBrains / VSCode IDE files
+.vscode/
+.idea/
+
+# MacOS files
+.DS_Store
+
+# Docker-related files
+docker-compose.override.yml
+
